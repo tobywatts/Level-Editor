@@ -1,4 +1,4 @@
-import pygame  # got up to 44:05 in the video
+import pygame  # got up to 44:05 in the video https://www.youtube.com/watch?v=xYhniILN6Ls&t=975s
 import button
 
 pygame.init()
