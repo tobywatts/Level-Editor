@@ -1,6 +1,5 @@
 import pygame
 
-
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -32,6 +31,7 @@ scroll_y = 0
 sky_img = pygame.image.load('bg_images/temp_bg.png').convert_alpha()
 sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH + SIDE_MARGIN - scroll_x, SCREEN_HEIGHT - scroll_y))
 
+
 def draw_bg():
     win.fill(GREEN)
     width = sky_img.get_width()
@@ -47,24 +47,25 @@ def draw_grid():
         pygame.draw.line(win, (255, 255, 255), (i * TILE_SIZE - scroll_x, 0), (i * TILE_SIZE - scroll_x, SCREEN_HEIGHT))
 
     for i in range(ROWS + 1):
+        pygame.draw.line(win, (255, 255, 255), (0, -i * TILE_SIZE - scroll_y),
+                         (SCREEN_WIDTH, -i * TILE_SIZE - scroll_y))
         pygame.draw.line(win, (255, 255, 255), (0, i * TILE_SIZE - scroll_y), (SCREEN_WIDTH, i * TILE_SIZE - scroll_y))
 
 
 running = True
 while running:
 
-
     # scrolling background
-    if scroll_left == True and scroll_x > 0:
+    if scroll_left and scroll_x > 0:
         scroll_x -= 5
 
-    if scroll_right == True and scroll_x < (sky_img.get_width() * 2 - SCREEN_WIDTH):
+    if scroll_right and scroll_x < (sky_img.get_width() * 2 - SCREEN_WIDTH):
         scroll_x += 5
 
-    if scroll_up == True and scroll_y > -sky_img.get_height():
+    if scroll_up and scroll_y > -sky_img.get_height():
         scroll_y -= 5
 
-    if scroll_down == True and scroll_y < (sky_img.get_height() - SCREEN_HEIGHT):
+    if scroll_down and scroll_y < (sky_img.get_height() - SCREEN_HEIGHT):
         scroll_y += 5
 
     clock.tick(FPS)
@@ -77,7 +78,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 scroll_left = True
