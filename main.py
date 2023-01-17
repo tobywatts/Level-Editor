@@ -59,7 +59,7 @@ while running:
     if scroll_left and scroll_x > 0:
         scroll_x -= 5
 
-    if scroll_right and scroll_x < (sky_img.get_width() * 2 - SCREEN_WIDTH):
+    if scroll_right and scroll_x < (sky_img.get_width() * 2 - SCREEN_WIDTH):  # could use '(MAX_COLUMNS * TILE_SIZE) - SCREEN_WIDTH'
         scroll_x += 5
 
     if scroll_up and scroll_y > -sky_img.get_height():
