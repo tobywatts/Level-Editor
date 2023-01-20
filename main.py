@@ -1,100 +1,45 @@
 import pygame
+import time
 
+from events import EventManager
+from renderer import Renderer
+from settings import *
+
+eventManager = EventManager()
+renderer = Renderer()
 
 pygame.init()
 
-clock = pygame.time.Clock()
-FPS = 60
-
-# screen size
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 640
-SIDE_MARGIN = 300
-
-GREEN = (144, 201, 120)
-
-win = pygame.display.set_mode((SCREEN_WIDTH + SIDE_MARGIN, SCREEN_HEIGHT))
-pygame.display.set_caption('Level Editor')
-
-# define game variables
-ROWS = 16
-MAX_COLUMNS = 100
-TILE_SIZE = SCREEN_HEIGHT // ROWS
-
-scroll_left = False
-scroll_right = False
-scroll_up = False
-scroll_down = False
-scroll_x = 0
-scroll_y = 0
-
-# load images
-sky_img = pygame.image.load('bg_images/temp_bg.png').convert_alpha()
-sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH + SIDE_MARGIN - scroll_x, SCREEN_HEIGHT - scroll_y))
-
-def draw_bg():
-    win.fill(GREEN)
-    width = sky_img.get_width()
-    height = sky_img.get_height()
-    for i in range(2):
-        win.blit(sky_img, (i * width - scroll_x, 0 - scroll_y))
-        # will draw images below creating an extra layer below to the background
-        win.blit(sky_img, (i * width - scroll_x, height -  scroll_y))
+start_time = time.time()
+delta_time = 0
 
 
-def draw_grid():
-    for i in range(MAX_COLUMNS + 1):
-        pygame.draw.line(win, (255, 255, 255), (i * TILE_SIZE - scroll_x, 0), (i * TILE_SIZE - scroll_x, SCREEN_HEIGHT))
+eventManager.store_tiles()
+eventManager.world()
+eventManager.tile_buttons()
 
-    for i in range(ROWS + 1):
-        pygame.draw.line(win, (255, 255, 255), (0, i * TILE_SIZE - scroll_y), (SCREEN_WIDTH, i * TILE_SIZE - scroll_y))
-        pygame.draw.line(win, (255, 255, 255), (0, i * TILE_SIZE - scroll_y + SCREEN_HEIGHT), (SCREEN_WIDTH, i * TILE_SIZE - scroll_y + SCREEN_HEIGHT))
+while eventManager.running:
 
-running = True
-while running:
+    new_time = time.time()
+
+    if new_time - start_time >= 1 / FPS:
+        delta_time = (new_time - start_time)
+        start_time = new_time
 
 
-    # scrolling background
-    if scroll_left == True and scroll_x > 0:
-        scroll_x -= 5
+    eventManager.checkEvents()
+    eventManager.checkScroll(renderer, delta_time, FPS)
 
-    if scroll_right == True and scroll_x < (sky_img.get_width() * 2 - SCREEN_WIDTH):
-        scroll_x += 5
+    renderer.draw_bg()
+    renderer.draw_grid()
 
-    if scroll_up == True and scroll_y > 0:
-        scroll_y -= 5
 
-    if scroll_down == True and scroll_y < (2 * sky_img.get_height() - SCREEN_HEIGHT):
-        scroll_y += 5
+    pygame.draw.rect(renderer.win, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
 
-    clock.tick(FPS)
+        # choose a tile
+    button_count = 0
+    for button_count, i in enumerate(eventManager.button_list):
+        if i.draw(renderer.win):
+            current_tile = button_count
 
-    draw_bg()
-    draw_grid()
-
-    pygame.draw.rect(win, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                scroll_left = True
-            if event.key == pygame.K_RIGHT:
-                scroll_right = True
-            if event.key == pygame.K_UP:
-                scroll_up = True
-            if event.key == pygame.K_DOWN:
-                scroll_down = True
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                scroll_left = False
-            if event.key == pygame.K_RIGHT:
-                scroll_right = False
-            if event.key == pygame.K_UP:
-                scroll_up = False
-            if event.key == pygame.K_DOWN:
-                scroll_down = False
     pygame.display.update()
