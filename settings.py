@@ -5,9 +5,6 @@ SIDE_MARGIN = 300
 
 FPS = 60
 
-
-GREEN = (144, 201, 120)
-
 # define game variables
 ROWS = 16
 MAX_COLUMNS = 100
@@ -16,4 +13,6 @@ TILE_SIZE = SCREEN_HEIGHT // ROWS
 TILE_ROWS = 6
 TILE_COLUMNS = 6
 SPRITE_WIDTH = 8
+current_tile = 0
 
+button_list = []
