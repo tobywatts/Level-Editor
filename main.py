@@ -16,6 +16,7 @@ delta_time = 0
 eventManager.store_tiles()
 eventManager.world()
 renderer.tile_buttons(eventManager)
+eventManager.load_level(renderer)
 
 while eventManager.running:
 
@@ -25,21 +26,26 @@ while eventManager.running:
         delta_time = (new_time - start_time)
         start_time = new_time
 
+        renderer.draw_bg()
+        renderer.draw_grid()
+        renderer.draw_world(eventManager)
+        eventManager.check_scroll(renderer, delta_time)
+
     eventManager.check_events()
-    eventManager.check_scroll(renderer, delta_time)
+    eventManager.tile_placing(renderer)
 
-    renderer.draw_bg()
-    renderer.draw_grid()
 
-    pygame.draw.rect(renderer.win, (51, 51, 51), (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
+    pygame.draw.rect(renderer.win, (50, 180, 125), (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
 
-    # choose a tile
-    button_count = 0
+    eventManager.save_level(renderer)
+
+
     for button_count, i in enumerate(button_list):
         if i.draw(renderer.win):
-            current_tile = button_count
-            print(current_tile)
+            eventManager.current_tile = button_count
 
-    pygame.draw.rect(renderer.win, (255, 255, 255), button_list[current_tile], 2)
+    
+
+    pygame.draw.rect(renderer.win, (255, 255, 255), button_list[eventManager.current_tile], 2)
 
     pygame.display.update()
