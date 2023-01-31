@@ -13,6 +13,9 @@ TILE_SIZE = SCREEN_HEIGHT // ROWS
 TILE_ROWS = 6
 TILE_COLUMNS = 6
 SPRITE_WIDTH = 8
-current_tile = 0
+
+
 
 button_list = []
+
+world_data = []
