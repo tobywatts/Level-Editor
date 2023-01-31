@@ -22,6 +22,9 @@ class Renderer:
         self.button_row = 0
         self.tile_button = None
 
+        self.save_image = pygame.image.load('save_button.png')
+        self.save_button = button.Button(SCREEN_WIDTH + 100, 565, self.save_image, 1)
+
     def draw_bg(self):
         self.win.fill((51, 51, 51))
         width = self.background_image.get_width()
@@ -54,3 +57,10 @@ class Renderer:
             if self.button_column == 4:
                 self.button_row += 1
                 self.button_column = 0
+
+    def draw_world(self, eventManager):
+        for y, row in enumerate(world_data):
+            for x, tile in enumerate(row):
+                if tile >= 0:
+                    eventManager.tiles[tile] = pygame.transform.scale(eventManager.tiles[tile], (TILE_SIZE, TILE_SIZE))
+                    self.win.blit(eventManager.tiles[tile], (x * TILE_SIZE - self.scroll_x, y * TILE_SIZE - self.scroll_y))
