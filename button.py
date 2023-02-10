@@ -26,6 +26,7 @@ class Button:
             self.clicked = False
 
         # draw button on screen
+        #self.image = pygame.transform.scale(self.image, (32, 32))
         surface.blit(self.image, (self.rect.x, self.rect.y))
 
         return action
